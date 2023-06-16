@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>默认的title</title>
+    <link rel="stylesheet" th:href="@{app.css}">
+    <style>
+        .active {
+            color: red;
+        }
+    </style>
+</head>
+<div>
+    <div class="app"></div>
+    <h2 th:text="${user.username}"></h2>
+    <div th:object="${user}">
+        <h2 th:text="*{username}"></h2>
+        <p th:text="*{age}"></p>
+    </div>
+    <th:block th:switch="true">
+        <!--百店寻宝-->
+        <p  th:case="${user.isA}" text="${user.isA}">
+        </p>
+        <!--额外奖励-->
+        <p th:case="${user.isB}" text="${user.isB}">
+        </p>
+        <!--限时特惠-->
+        <p  th:case="${user.isC}" text="${user.isC}">
+        </p>
+    </th:block>
+    <div th:utext="${htmlcontent}"></div>
+    <!--    th:if-->
+    <p th:if="${user.isVip}">会员</p>
+    <p th:text="${#dates.format(user.createTime,'yyyy-MM-dd HH:mm')}"></p>
+    <!--    th:each-->
+    <ul>
+        <li th:each="tag:${user.tags}" th:text="${tag}"></li>
+    </ul>
+    <ul>
+        <li th:each="tag,stat:${user.tags}" th:text="${tag}" th:classappend="${stat.last}?'active'"></li>
+    </ul>
+    <!--    th:switch-->
+    <div th:switch="${user.sex}">
+        <p th:case="1">男</p>
+        <p th:case="2">女</p>
+        <p th:case="*">默认</p>
+    </div>
+    <!--    replace com1-->
+    <div th:replace="~{component::com1}"></div>
+    <!--    insert com1-->
+    <div th:insert="~{component::com1}"></div>
+    <!--    insert com2-->
+    <div th:insert="~{component::#com2}"></div>
+    <div th:insert="~{component::com3('传递的数据')}"></div>
+    <div th:insert="~{component::com4(~{::#message})}">
+        <p id="message">替换的模块</p>
+    </div>
+</div>
+<script th:inline="javascript">
+    const user =/*[[${user}]]*/{};
+    console.log(user)
+</script>
+</html>
